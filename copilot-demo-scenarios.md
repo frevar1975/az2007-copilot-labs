@@ -1,165 +1,276 @@
-# GitHub Copilot – Demo de Escenarios de Asistencia IA (.NET 8 Web API)
+# AZ-2007 | Laboratorio Completo – GitHub Copilot con .NET 8 Web API
 
-## Objetivo
-Demostrar cómo GitHub Copilot asiste al desarrollador en escenarios reales de desarrollo utilizando un proyecto ASP.NET Core Web API (.NET 8).
+## 🎯 Objetivo
 
----
+En este laboratorio practicarás cómo usar GitHub Copilot en escenarios reales con una API en .NET 8:
 
-# 1️⃣ Responder preguntas sobre lenguajes, herramientas y tecnologías
-
-## Qué demostrar
-Copilot como asistente de conocimiento técnico.
-
-## UI recomendada
-✔ Chat rápido (Quick Chat)
-
-## Prompt sugerido
-> ¿Qué es una ASP.NET Core Web API en .NET 8 y cuál es la diferencia entre Minimal APIs y Controllers?
-
-## Qué decir en clase
-- Copilot no solo genera código.
-- También responde dudas técnicas.
-- Funciona como asistente contextual dentro del IDE.
+1. Responder preguntas técnicas
+2. Explicar y documentar código existente
+3. Detectar y corregir errores
+4. Generar nuevas funcionalidades
+5. Generar pruebas unitarias
+6. Refactorizar código
+7. Revisar código y sugerir mejoras
 
 ---
 
-# 2️⃣ Explicar y documentar el código existente
+# 🔹 0️⃣ Preparación Inicial
 
-## Qué demostrar
-Copilot entiende el código actual y lo puede explicar o documentar.
+## 0.1 Verificar .NET instalado
 
-## UI recomendada
-✔ Vista de chat (Chat View)
+```powershell
+dotnet --list-sdks
+```
 
-## Acción
-Abrir `Program.cs`
-
-## Prompt sugerido
-> Explícame este archivo Program.cs como si fuera para un alumno principiante y agrega comentarios útiles sin cambiar la lógica.
-
-## Qué decir en clase
-- Copilot analiza el código completo.
-- Puede explicar arquitectura, flujo y responsabilidades.
-- Útil para onboarding y documentación rápida.
+Debe aparecer una versión 8.x.
 
 ---
 
-# 3️⃣ Proponer correcciones de error o técnicas alternativas
+## 0.2 Crear el proyecto (si no existe)
 
-## Qué demostrar
-Copilot ayuda a corregir errores y mejorar lógica.
+```powershell
+mkdir az2007-copilot-labs
+cd az2007-copilot-labs
 
-## UI recomendada
-✔ Acciones inteligentes (Smart Actions)  
-✔ Chat insertado (Inline Chat)
+dotnet new sln -n az2007-copilot-labs
+mkdir src
 
-## Acción
-Provocar un pequeño error, por ejemplo:
-- Usar `First()` en vez de `FirstOrDefault()`.
-
-## Prompt sugerido (si usas chat)
-> Este endpoint falla cuando el ID no existe. Corrige el problema y explica por qué ocurre.
-
-## Qué decir en clase
-- Copilot detecta patrones problemáticos.
-- Sugiere mejores prácticas.
-- Puede explicar el motivo del error.
+dotnet new webapi -n StoreApi -o src/StoreApi --framework net8.0
+dotnet sln add src/StoreApi/StoreApi.csproj
+```
 
 ---
 
-# 4️⃣ Generar nuevas características de código
+## 0.3 Ejecutar la API
 
-## Qué demostrar
-Copilot genera endpoints, clases o bloques completos.
+```powershell
+dotnet run --project src/StoreApi/StoreApi.csproj
+```
 
-## UI recomendada
-✔ Chat insertado (Inline Chat)
+Abrir en el navegador:
 
-## Prompt sugerido
-> Agrega endpoints mínimos para Products en memoria:
-> - GET /api/products
-> - GET /api/products/{id}
-> - POST /api/products
-> Usa record Product(int Id, string Name, decimal Price). Sin base de datos.
+```
+http://localhost:5040/swagger
+```
 
-## Qué decir en clase
-- Copilot genera código funcional.
-- No es solo autocompletado.
-- Acelera el desarrollo inicial.
+Deberías ver el endpoint `/weatherforecast`.
 
 ---
 
-# 5️⃣ Generar casos de prueba unitaria
+# 1️⃣ Responder preguntas técnicas
 
-## Qué demostrar
-Copilot crea pruebas automatizadas.
+Abre GitHub Copilot Chat (Quick Chat o Chat View) y escribe:
 
-## UI recomendada
-✔ Vista de chat (Chat View)
+```
+¿Qué es Swagger/OpenAPI en ASP.NET Core y para qué se usa?
+```
 
-## Prompt sugerido
-> Genera pruebas unitarias con xUnit para validar:
-> - Obtener lista de productos
-> - Obtener producto inexistente devuelve 404
-> - Crear producto correctamente
-
-## Qué decir en clase
-- Copilot entiende la intención funcional.
-- Puede crear pruebas consistentes.
-- Aumenta calidad y cobertura rápidamente.
+Observa cómo Copilot responde con explicación técnica contextual.
 
 ---
 
-# 6️⃣ Refactorizar código existente y sugerir mejoras
+# 2️⃣ Explicar y documentar código existente
 
-## Qué demostrar
-Copilot mejora estructura y diseño.
+Abre el archivo:
 
-## UI recomendada
-✔ Chat insertado (Inline Chat)
+```
+src/StoreApi/Program.cs
+```
 
-## Acción
-Seleccionar bloque de endpoints.
+En Copilot Chat escribe:
 
-## Prompt sugerido
-> Refactoriza este código moviendo la lógica a un ProductService. Mantén Program.cs limpio y simple.
+```
+Explícame este Program.cs paso a paso y agrega comentarios útiles sin cambiar la lógica.
+```
 
-## Qué decir en clase
-- Copilot ayuda a aplicar buenas prácticas.
-- Puede separar responsabilidades.
-- Útil para mejorar mantenibilidad.
+Aplica los comentarios sugeridos si son correctos.
 
 ---
 
-# 7️⃣ Revisar el código y sugerir actualizaciones
+# 3️⃣ Detectar y corregir un error
 
-## Qué demostrar
-Copilot como herramienta de code review.
+## 3.1 Provocar el error
 
-## UI recomendada
-✔ Vista de chat (Chat View)
+En `Program.cs`, busca esta línea:
 
-## Prompt sugerido
-> Realiza una revisión de código como desarrollador senior. Indica mejoras en legibilidad, validaciones, seguridad y diseño.
+```csharp
+summaries[Random.Shared.Next(summaries.Length)]
+```
 
-## Qué decir en clase
-- Copilot detecta mejoras estructurales.
-- Sugiere validaciones adicionales.
-- Funciona como asistente de revisión.
+Cámbiala por:
+
+```csharp
+summaries[Random.Shared.Next(summaries.Length + 5)]
+```
+
+Guarda el archivo.
 
 ---
 
-# Resumen Final
+## 3.2 Probar el error
 
-En esta demo vimos cómo GitHub Copilot puede:
+Ejecuta nuevamente:
 
-✔ Responder preguntas técnicas  
-✔ Explicar código  
-✔ Corregir errores  
-✔ Generar nuevas funcionalidades  
-✔ Crear pruebas unitarias  
-✔ Refactorizar  
-✔ Realizar revisiones de código  
+```powershell
+dotnet run --project src/StoreApi/StoreApi.csproj
+```
 
-Copilot no reemplaza al desarrollador.  
-Funciona como un **copiloto que acelera y apoya la toma de decisiones técnicas.**
+En Swagger ejecuta:
+
+GET `/weatherforecast`
+
+Deberías obtener:
+
+- 500 Internal Server Error  
+- IndexOutOfRangeException  
+
+---
+
+## 3.3 Pedir a Copilot que lo corrija
+
+Selecciona la línea incorrecta y usa Inline Chat con:
+
+```
+Este endpoint lanza un IndexOutOfRangeException.
+Corrígelo usando buenas prácticas y explica por qué ocurre.
+```
+
+Aplica el cambio sugerido (volver a `summaries.Length`).
+
+Vuelve a probar en Swagger → debe responder 200 OK.
+
+---
+
+# 4️⃣ Generar nuevas funcionalidades
+
+Vamos a crear un CRUD mínimo en memoria.
+
+Coloca el cursor debajo del endpoint `/weatherforecast` y usa Inline Chat con:
+
+```
+Agrega endpoints mínimos para Products en memoria:
+
+- GET /api/products
+- GET /api/products/{id}
+- POST /api/products
+
+Usa record Product(int Id, string Name, decimal Price).
+Sin base de datos.
+Manténlo simple.
+```
+
+Acepta el código generado.
+
+---
+
+## Probar en Swagger
+
+Ejecuta:
+
+```powershell
+dotnet run --project src/StoreApi/StoreApi.csproj
+```
+
+En Swagger deberías ver:
+
+- GET /api/products
+- GET /api/products/{id}
+- POST /api/products
+
+Prueba cada uno.
+
+---
+
+# 5️⃣ Generar pruebas unitarias
+
+## 5.1 Crear proyecto de pruebas
+
+```powershell
+dotnet new xunit -n StoreApi.Tests -o src/StoreApi.Tests --framework net8.0
+dotnet add src/StoreApi.Tests/StoreApi.Tests.csproj reference src/StoreApi/StoreApi.csproj
+dotnet sln add src/StoreApi.Tests/StoreApi.Tests.csproj
+```
+
+---
+
+## 5.2 Pedir pruebas a Copilot
+
+En Copilot Chat escribe:
+
+```
+Genera pruebas xUnit para:
+
+- GET /api/products devuelve lista
+- GET /api/products/{id} devuelve 404 si no existe
+- POST /api/products crea un producto correctamente
+Dame el archivo completo.
+```
+
+Copia el código generado en el proyecto de tests.
+
+---
+
+## 5.3 Ejecutar pruebas
+
+```powershell
+dotnet test
+```
+
+Verifica que los tests se ejecuten correctamente.
+
+---
+
+# 6️⃣ Refactorizar código
+
+Selecciona el bloque de endpoints de Products y usa Inline Chat:
+
+```
+Refactoriza moviendo la lógica a un ProductService en un archivo nuevo.
+Deja Program.cs más limpio.
+Manténlo simple.
+```
+
+Aplica los cambios sugeridos.
+
+---
+
+# 7️⃣ Revisión de código
+
+En Copilot Chat escribe:
+
+```
+Haz una revisión de código como desarrollador senior.
+Sugiere mejoras en diseño, validación, legibilidad y seguridad básica.
+Devuélveme una lista priorizada.
+```
+
+Aplica algunas mejoras sugeridas.
+
+---
+
+# ✅ Checklist Final
+
+- [ ] Ejecuté la API y abrí Swagger  
+- [ ] Hice una pregunta técnica a Copilot  
+- [ ] Copilot explicó el archivo Program.cs  
+- [ ] Provocé un error y Copilot lo corrigió  
+- [ ] Copilot generó endpoints nuevos  
+- [ ] Generé pruebas unitarias con Copilot  
+- [ ] Refactoricé el código  
+- [ ] Realicé una revisión de código con Copilot  
+
+---
+
+## 🏁 Conclusión
+
+En este laboratorio utilizaste GitHub Copilot como:
+
+- Asistente técnico
+- Documentador
+- Detector de errores
+- Generador de funcionalidades
+- Generador de pruebas
+- Refactorizador
+- Revisor de código
+
+Copilot acelera el desarrollo y mejora la calidad del código cuando se usa correctamente.
