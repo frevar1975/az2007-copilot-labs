@@ -1,3 +1,20 @@
+<!-- 
+  StoreApi.csproj - Project Configuration File
+  
+  This is the project file for the StoreApi ASP.NET Core Web API application.
+  
+  Configuration Details:
+  - Target Framework: .NET 8.0
+  - Nullable reference types are enabled for enhanced null-safety
+  - Implicit usings are enabled to reduce boilerplate namespace declarations
+  
+  Dependencies:
+  - Microsoft.AspNetCore.OpenApi (v8.0.24): Provides OpenAPI/Swagger support for API documentation
+  - Swashbuckle.AspNetCore (v6.6.2): Generates Swagger UI and OpenAPI specification documents
+  
+  These packages enable automatic API documentation generation and interactive API testing 
+  through the Swagger UI interface.
+-->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>

@@ -23,6 +23,13 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
+    /// <summary>
+    /// Generates an array of weather forecast data for the next 5 days.
+    /// </summary>
+    /// <remarks>
+    /// Creates a collection of WeatherForecast objects with randomly generated temperatures
+    /// and weather summaries. Each forecast is for a consecutive day starting from tomorrow.
+    /// </remarks>
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
