@@ -1,283 +1,238 @@
 # AZ-2007  
-# Cuadernillo Completo de Laboratorios  
-# Análisis y Documentación de Código con GitHub Copilot
+# Laboratorio con Cronograma  
+# GitHub Copilot aplicado a una Product Catalog API
 
 Autor: Freddy Vargas  
 Curso: AZ-2007  
-Duración estimada: 90 – 120 minutos  
+Duración total estimada: 100 minutos  
 
 ---
 
-# 📌 Introducción
+# 🕒 Estructura del Laboratorio
 
-En este laboratorio trabajarás con GitHub Copilot para:
-
-- Analizar un código base desconocido
-- Explicar arquitectura y componentes
-- Detectar mejoras técnicas
-- Generar documentación XML automática
-- Crear documentación de proyecto (README)
-- Automatizar tareas usando modo Agente
-- Generar pruebas unitarias
-
-Proyecto base: ASP.NET Core Web API (.NET 8)
+| Fase | Actividad | Tiempo |
+|------|------------|--------|
+| Fase 1 | Crear API base | 15 min |
+| Fase 2 | Análisis inteligente | 20 min |
+| Fase 3 | Documentación insertada | 20 min |
+| Fase 4 | Documentación del proyecto | 15 min |
+| Fase 5 | Modo Agente | 15 min |
+| Fase 6 | Pruebas unitarias | 10 min |
+| Fase 7 | Reflexión | 5 min |
+| **Total** | | **100 min** |
 
 ---
 
-# 🛠 Requisitos
+# 🔹 FASE 1 – Crear Product Catalog API (15 min)
 
-- Cuenta GitHub con Copilot habilitado
-- Visual Studio Code
-- Extensión GitHub Copilot instalada
-- .NET SDK 8
-- Terminal integrada
-
-Verificar instalación:
+## Paso 1 – Crear proyecto
 
 ```bash
-dotnet --version
-```
-
----
-
-# 🔹 FASE 1 – Creación del Proyecto Base
-
-## Paso 1 – Crear la Web API
-
-```bash
-dotnet new webapi -n StoreApi
-cd StoreApi
+dotnet new webapi -n ProductCatalogApi
+cd ProductCatalogApi
 code .
 ```
 
-## Paso 2 – Ejecutar el proyecto
+Eliminar WeatherForecast.
+
+---
+
+## Paso 2 – Crear modelo Product
+
+Crear carpeta `Models`  
+Archivo: `Product.cs`
+
+```csharp
+namespace ProductCatalogApi.Models;
+
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public bool IsActive { get; set; }
+}
+```
+
+---
+
+## Paso 3 – Crear controlador básico
+
+Crear carpeta `Controllers`  
+Archivo: `ProductsController.cs`
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using ProductCatalogApi.Models;
+
+namespace ProductCatalogApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private static List<Product> _products = new();
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(_products);
+    }
+
+    [HttpPost]
+    public IActionResult Create(Product product)
+    {
+        product.Id = _products.Count + 1;
+        _products.Add(product);
+        return CreatedAtAction(nameof(Get), product);
+    }
+}
+```
+
+Ejecutar:
 
 ```bash
 dotnet run
 ```
 
-Abrir navegador en:
-
-```
-https://localhost:xxxx/swagger
-```
-
-Verificar que el endpoint WeatherForecast funciona.
+Probar endpoints en Swagger.
 
 ---
 
-# 🔹 FASE 2 – Análisis Inteligente del Código
+# 🔹 FASE 2 – Análisis Inteligente (20 min)
 
 ## Objetivo
-Comprender un proyecto desconocido utilizando Copilot.
+Analizar arquitectura y diseño usando Copilot.
 
 ---
 
-## Paso 1 – Analizar arquitectura completa
+## Actividad 1 – Analizar arquitectura (7 min)
 
-Abrir Vista de Chat en modo Preguntar.
-
-Escribir:
+Modo Preguntar:
 
 ```
-@workspace Explain the architecture of this project.
-```
-
-Observar:
-
-- Estructura general
-- Program.cs
-- Controladores
-- Middleware
-- Inyección de dependencias
-
----
-
-## Paso 2 – Analizar un archivo específico
-
-Abrir:
-
-```
-WeatherForecastController.cs
-```
-
-Escribir en el chat:
-
-```
-Explain the responsibility of this controller.
+@workspace Explain the architecture of this API.
 ```
 
 ---
 
-## Paso 3 – Analizar bloque seleccionado
-
-Seleccionar el método `Get()` y escribir:
+## Actividad 2 – Evaluar diseño del controlador (7 min)
 
 ```
-/explain
+Review this controller and suggest improvements for production use.
 ```
 
-Observar:
-
-- Tipo de retorno
-- Lógica interna
-- Qué datos genera
-- Cómo funciona LINQ (si aplica)
-
----
-
-## Paso 4 – Detectar mejoras
-
-En el chat:
-
-```
-How could this controller be improved for production use?
-```
-
-Ejemplos esperados:
-
-- Logging estructurado
-- Manejo de excepciones
-- DTOs
+Esperar sugerencias como:
+- Separar lógica en servicio
 - Validaciones
-- Separación en servicios
-- Principios SOLID
+- Logging
+- Manejo de errores
 
 ---
 
-# 🔹 FASE 3 – Documentación Insertada en el Código
+## Actividad 3 – Detectar riesgos (6 min)
 
-## Objetivo
-Generar comentarios XML automáticos en clases y métodos.
+```
+What are the risks of using a static List for data storage?
+```
+
+Discusión sobre:
+- Concurrencia
+- Persistencia
+- Escalabilidad
 
 ---
 
-## Paso 1 – Documentar método puntual
+# 🔹 FASE 3 – Documentación Insertada (20 min)
 
-Seleccionar el método `Get()` y escribir:
+## Actividad 1 – Documentar modelo (7 min)
+
+Seleccionar clase `Product`.
 
 ```
 /doc
 ```
 
-Resultado esperado:
+---
 
-```csharp
-/// <summary>
-/// Retrieves a list of weather forecasts.
-/// </summary>
-/// <returns>A collection of WeatherForecast objects.</returns>
+## Actividad 2 – Documentar controlador completo (7 min)
+
+```
+Document this controller including endpoint descriptions.
 ```
 
 ---
 
-## Paso 2 – Documentar clase completa
+## Actividad 3 – Acción Inteligente (6 min)
 
-Seleccionar la clase completa y escribir:
+Seleccionar método `Create()` → Generate Docs.
+
+Comparar resultados.
+
+---
+
+# 🔹 FASE 4 – Documentación del Proyecto (15 min)
+
+## Crear README profesional (10 min)
+
+Modo Edición:
 
 ```
-Document this class including summary and endpoint description.
-```
-
----
-
-## Paso 3 – Acción Inteligente
-
-1. Seleccionar un método
-2. Clic derecho
-3. Elegir **Generate Docs**
-
-Copilot insertará la documentación directamente.
-
----
-
-## Paso 4 – Evaluar calidad
-
-Reflexionar:
-
-- ¿La descripción es clara?
-- ¿Explica parámetros correctamente?
-- ¿La intención del método está bien descrita?
-- ¿Se requiere ajuste manual?
-
----
-
-# 🔹 FASE 4 – Documentación del Proyecto
-
-## Objetivo
-Generar documentación profesional del proyecto.
-
----
-
-## Paso 1 – Crear README.md
-
-Cambiar el chat a modo Edición.
-
-Escribir:
-
-```
-Create a professional README.md file including:
+Create a professional README.md including:
 - Project description
-- Architecture overview
-- Endpoints
-- Technologies used
-- How to run
+- API endpoints
+- Example JSON requests
+- How to run locally
+- Technology stack
 ```
-
-Revisar cambios sugeridos.
-Aceptar.
 
 ---
 
-## Paso 2 – Mejorar README
+## Mejorar README (5 min)
 
 ```
-Improve the README to follow open source best practices.
+Improve this README to follow open source best practices.
 ```
-
-Agregar:
-
-- Badges
-- Estructura clara
-- Sección de contribución
-- Licencia
 
 ---
 
-# 🔹 FASE 5 – Modo Agente (Automatización Completa)
+# 🔹 FASE 5 – Modo Agente (15 min)
 
-Cambiar chat a modo Agente.
+## Automatización global
 
-Escribir:
+Cambiar a modo Agente:
 
 ```
-Analyze this entire project and generate missing documentation for all public classes and methods.
+Refactor this API to follow clean architecture principles.
 ```
 
-Observar cómo:
-
-- Recorre múltiples archivos
-- Inserta documentación automáticamente
-- Sugiere mejoras estructurales
+Observar propuesta:
+- Crear carpeta Services
+- Separar lógica
+- Inyectar dependencias
 
 ---
 
-# 🔹 FASE 6 – Generación de Pruebas Unitarias
-
-Escribir:
+## Documentación completa
 
 ```
-Generate unit tests for this controller using xUnit.
+Generate documentation for all public classes in this project.
 ```
 
-Crear proyecto de pruebas:
+---
+
+# 🔹 FASE 6 – Generar Pruebas Unitarias (10 min)
+
+```
+Generate unit tests for ProductsController using xUnit.
+```
+
+Crear proyecto:
 
 ```bash
-dotnet new xunit -n StoreApi.Tests
+dotnet new xunit -n ProductCatalogApi.Tests
 ```
 
-Copiar pruebas sugeridas.
-Agregar referencia al proyecto principal.
 Ejecutar:
 
 ```bash
@@ -286,72 +241,52 @@ dotnet test
 
 ---
 
-# 🔹 FASE 7 – Refactorización Guiada (Opcional Avanzado)
-
-```
-Refactor this controller to follow clean architecture principles.
-```
-
-Analizar propuesta:
-
-- Separación en capas
-- Servicio Application
-- Repository
-- Inyección de dependencias
-- DTOs
-
----
-
-# 🔹 Comparativa de Modos de Copilot
-
-| Modo | Uso Ideal | Nivel Automatización |
-|------|------------|---------------------|
-| Preguntar | Análisis conceptual | Bajo |
-| Chat Insertado | Documentación puntual | Medio |
-| Edición | Actualizar archivos | Alto |
-| Agente | Automatización completa | Muy Alto |
-
----
-
-# 🔹 Reflexión Final
+# 🔹 FASE 7 – Reflexión (5 min)
 
 Responder:
 
-1. ¿Cuándo usarías modo Preguntar?
-2. ¿Cuándo usarías modo Edición?
-3. ¿Cuándo usarías modo Agente?
-4. ¿Copilot reemplaza revisión humana?
-5. ¿Qué validarías antes de hacer commit?
+1. ¿Qué mejoras estructurales propuso Copilot?
+2. ¿Qué revisarías antes de usar en producción?
+3. ¿Cuándo usarías modo Agente en un entorno real?
+4. ¿Confías 100% en el código generado?
+
+---
+
+# 📊 Comparativa Final
+
+| Modo | Uso Ideal | Automatización |
+|------|------------|---------------|
+| Preguntar | Análisis conceptual | Bajo |
+| Edición | Actualización controlada | Medio |
+| Agente | Refactorización global | Alto |
 
 ---
 
 # 🏁 Resultado Esperado
 
-Al finalizar debes tener:
+Al finalizar:
 
-- Proyecto comprendido
-- Código explicado
-- Métodos documentados
-- README generado
-- Pruebas unitarias creadas
-- Mejoras arquitectónicas sugeridas
+- API CRUD básica funcional
+- Código documentado
+- README profesional
+- Refactorización propuesta
+- Tests generados
 
 ---
 
 # 🚀 Conclusión
 
-GitHub Copilot no solo genera código.
+Este laboratorio demuestra que Copilot:
 
-Permite:
+- Analiza arquitectura
+- Detecta riesgos técnicos
+- Mejora diseño
+- Documenta automáticamente
+- Genera pruebas
+- Propone refactorizaciones
 
-- Analizar arquitectura
-- Explicar lógica
-- Documentar automáticamente
-- Automatizar tareas repetitivas
-- Mejorar calidad técnica
-
-El desarrollador sigue siendo responsable de validar y decidir.
+Pero el desarrollador sigue tomando decisiones finales.
 
 ---
 
-# 🔥 FIN – LABORATORIO COMPLETO AZ-2007
+# 🔥 FIN – LAB PRODUCT CATALOG API
